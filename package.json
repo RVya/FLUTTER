@@ -1,0 +1,8 @@
+{
+  "name": "flutter-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:RVya/FLUTTER.git",
+  "author": "ayameng<wave.weiya@gmail.com>",
+  "license": "MIT"
+}
