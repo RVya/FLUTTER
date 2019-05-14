@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
 void main() => runApp(new MyApp());
 
@@ -105,10 +106,26 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Startup Name Generator',
-      home: new RandomWords(),
+      home: new Scaffold(
+        appBar: AppBar(
+          title: Text("稻壳儿"),
+        ),
+        body: new WebviewScaffold(
+          url: "http://docs.weiya.live/",
+          withJavascript: true,
+          supportMultipleWindows: true,
+          withLocalStorage: true,
+          withZoom: true,
+          initialChild: Container(
+            color: Colors.white,
+            child: const Center(
+              child: Text('LOADING.....'),
+            ),
+          ),
+        ),
+      ),
       theme: new ThemeData(
-        primaryColor: Colors.white,
+        primaryColor: Colors.blue,
       ),
     );
   }
