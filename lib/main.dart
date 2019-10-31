@@ -1,132 +1,158 @@
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
-void main() => runApp(new MyApp());
+void main() {
+  runApp(new MaterialApp(
+    title: 'Flutter Tutorial',
+    home: new TutorialHome(),
+  ));
+}
 
-class RandomWordsState extends State<RandomWords> {
-  final _biggerFont = const TextStyle(fontSize: 18.0);
-  final _suggestions = <WordPair>[];
-  final _saved = new Set<WordPair>();
-
-  void _pushSaved() {
-    Navigator.of(context).push(new MaterialPageRoute(
-      builder: (context) {
-        final tiles = _saved.map(
-          (pair) {
-            return new ListTile(
-              title: new Text(
-                pair.asPascalCase,
-                style: _biggerFont,
-              ),
-            );
-          },
-        );
-        final divided = ListTile.divideTiles(
-          context: context,
-          tiles: tiles,
-        ).toList();
-
-        return new Scaffold(
-          appBar: new AppBar(
-            title: new Text('Saved Suggestions'),
-          ),
-          body: new ListView(children: divided),
-        );
-      },
-    ));
-  }
-
+class TutorialHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    //Scaffold是Material中主要的布局组件.
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text('Startup Name Generator'),
+        leading: new IconButton(
+          icon: new Icon(Icons.menu),
+          tooltip: 'Navigation menu',
+          onPressed: null,
+        ),
+        title: new Text('TEST DMO'),
         actions: <Widget>[
-          new IconButton(icon: new Icon(Icons.list), onPressed: _pushSaved),
+          new IconButton(
+            icon: new Icon(Icons.search),
+            tooltip: 'Search',
+            onPressed: null,
+          ),
         ],
       ),
-      body: _buildSuggestions(),
-    );
-  }
-
-  Widget _buildRow(WordPair pair) {
-    final alreadySaved = _saved.contains(pair);
-    return new ListTile(
-      title: new Text(
-        pair.asPascalCase,
-        style: _biggerFont,
+      //body占屏幕的大部分
+      body: new Center(
+        child: new Counter(),
       ),
-      trailing: new Icon(
-        alreadySaved ? Icons.favorite : Icons.favorite_border,
-        color: alreadySaved ? Colors.red : null,
+      floatingActionButton: new FloatingActionButton(
+        tooltip: 'Add', // used by assistive technologies
+        child: new Icon(Icons.add),
+        onPressed: null,
       ),
-      onTap: () {
-        setState(() {
-          if (alreadySaved) {
-            _saved.remove(pair);
-          } else {
-            _saved.add(pair);
-          }
-        });
-      },
     );
-  }
-
-  Widget _buildSuggestions() {
-    return new ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        // 对于每个建议的单词对都会调用一次itemBuilder，然后将单词对添加到ListTile行中
-        // 在偶数行，该函数会为单词对添加一个ListTile row.
-        // 在奇数行，该函数会添加一个分割线widget，来分隔相邻的词对。
-        // 注意，在小屏幕上，分割线看起来可能比较吃力。
-        itemBuilder: (context, i) {
-          // 在每一列之前，添加一个1像素高的分隔线widget
-          if (i.isOdd) return new Divider();
-
-          // 语法 "i ~/ 2" 表示i除以2，但返回值是整形（向下取整），比如i为：1, 2, 3, 4, 5
-          // 时，结果为0, 1, 1, 2, 2， 这可以计算出ListView中减去分隔线后的实际单词对数量
-          final index = i ~/ 2;
-          // 如果是建议列表中最后一个单词对
-          if (index >= _suggestions.length) {
-            // ...接着再生成10个单词对，然后添加到建议列表
-            _suggestions.addAll(generateWordPairs().take(10));
-          }
-          return _buildRow(_suggestions[index]);
-        });
   }
 }
 
-class RandomWords extends StatefulWidget {
-  @override
-  createState() => new RandomWordsState();
-}
-
-class MyApp extends StatelessWidget {
+// 有状态组件
+class MyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      home: new Scaffold(
-        appBar: AppBar(
-          title: Text("稻壳儿"),
+    return new GestureDetector(
+      onTap: () {
+        print('MyButton was tapped!');
+      },
+      child: new Container(
+        height: 36.0,
+        padding: const EdgeInsets.all(8.0),
+        margin: const EdgeInsets.symmetric(horizontal: 8.0),
+        decoration: new BoxDecoration(
+          borderRadius: new BorderRadius.circular(5.0),
+          color: Colors.lightGreen[500],
         ),
-        body: new WebviewScaffold(
-          url: "http://docs.weiya.live/",
-          withJavascript: true,
-          supportMultipleWindows: true,
-          withLocalStorage: true,
-          withZoom: true,
-          initialChild: Container(
-            color: Colors.white,
-            child: const Center(
-              child: Text('LOADING.....'),
-            ),
-          ),
+        child: new Center(
+          child: new Text('Engage'),
         ),
-      ),
-      theme: new ThemeData(
-        primaryColor: Colors.blue,
       ),
     );
+  }
+}
+
+// 有状态的 widget
+class Counter1 extends StatefulWidget {
+  // This class is the configuration for the state. It holds the
+  // values (in this nothing) provided by the parent and used by the build
+  // method of the State. Fields in a Widget subclass are always marked "final".
+
+  @override
+  _CounterState1 createState() => new _CounterState1();
+}
+
+class _CounterState1 extends State<Counter> {
+  int _counter = 0;
+
+  void _increment() {
+    setState(() {
+      // This call to setState tells the Flutter framework that
+      // something has changed in this State, which causes it to rerun
+      // the build method below so that the display can reflect the
+      // updated values. If we changed _counter without calling
+      // setState(), then the build method would not be called again,
+      // and so nothing would appear to happen.
+      _counter++;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // This method is rerun every time setState is called, for instance
+    // as done by the _increment method above.
+    // The Flutter framework has been optimized to make rerunning
+    // build methods fast, so that you can just rebuild anything that
+    // needs updating rather than having to individually change
+    // instances of widgets.
+    return new Row(
+      children: <Widget>[
+        new RaisedButton(
+          onPressed: _increment,
+          child: new Text('Increment'),
+        ),
+        new Text('Count: $_counter'),
+      ],
+    );
+  }
+}
+
+class CounterDisplay extends StatelessWidget {
+  CounterDisplay({this.count});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    return new Text('Count: $count');
+  }
+}
+
+class CounterIncrementor extends StatelessWidget {
+  CounterIncrementor({this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return new RaisedButton(
+      onPressed: onPressed,
+      child: new Text('Increment'),
+    );
+  }
+}
+
+class Counter extends StatefulWidget {
+  @override
+  _CounterState createState() => new _CounterState();
+}
+
+class _CounterState extends State<Counter> {
+  int _counter = 0;
+
+  void _increment() {
+    setState(() {
+      ++_counter;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Row(children: <Widget>[
+      new CounterIncrementor(onPressed: _increment),
+      new CounterDisplay(count: _counter),
+    ]);
   }
 }
